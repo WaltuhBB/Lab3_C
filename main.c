@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 //Перевод строки в вектор
 unsigned char* StrToVec(char* str, size_t* cells)
@@ -83,6 +84,30 @@ char* VecToStr(unsigned char* vec, size_t cells)
     return str;
 }
 
+//Вывод вектора в консоль
+bool printVec(unsigned char* vec, size_t cells)
+{
+    bool res = false;
+
+    if (vec != NULL && cells > 0)
+    {
+        char *str = VecToStr(vec, cells);
+
+        if (str != NULL)
+        {
+            for (size_t i = 0; i < (cells * 8) + 1; i++)
+            {
+                printf("%c", str[i]);
+            }
+            
+            free(str);
+            res = true;
+        }
+    }
+
+    return res;
+}
+
 int main()
 {
     
@@ -106,18 +131,8 @@ int main()
         printf("Memory was never allocated ");
     }
 
-    if (vec != NULL)
-    {
-        char *str_c = VecToStr(vec, cells);
-
-        for (size_t i = 0; i < (cells * 8) + 1; i++)
-        {
-            printf("%c", str_c[i]);
-        }
-
-        free(str_c);
-    }
-    else
+    bool flagN = printVec(vec, cells);
+    if (!flagN)
     {
         printf("Memory was never allocated ");
     }
