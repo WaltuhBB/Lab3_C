@@ -8,7 +8,7 @@ unsigned char* StrToVec(char* str, size_t* cells)
 {
     unsigned char *res = NULL;
     
-    if (str != NULL && cells != NULL && strlen(str))
+    if (str && cells && strlen(str))
     {
         size_t len = strlen(str);
         *cells = ((len-1) / 8) + 1;
@@ -17,7 +17,7 @@ unsigned char* StrToVec(char* str, size_t* cells)
 
         unsigned char *vec = (unsigned char*)calloc(*cells, sizeof(unsigned char));
         
-        if (vec != NULL)
+        if (vec)
         {
             for (size_t i = 0; i < *cells; i++)
             {
@@ -46,14 +46,14 @@ char* VecToStr(unsigned char* vec, size_t cells)
 {
     char *str = NULL;
 
-    if (vec != NULL && cells > 0)
+    if (vec && cells > 0)
     {
         size_t len = (cells * 8) + 1;
         str = (char*)calloc(len, sizeof(char));
         
-        if (str != NULL)
+        if (str)
         {
-            unsigned char mask = 1;
+            unsigned char mask;
             size_t k = 0;
 
             for (size_t i = 0; i < cells; i++)
@@ -85,24 +85,65 @@ char* VecToStr(unsigned char* vec, size_t cells)
 }
 
 //Вывод вектора в консоль
-bool printVec(unsigned char* vec, size_t cells)
+bool printVec(unsigned char* vec, size_t len, size_t cells)
 {
     bool res = false;
 
-    if (vec != NULL && cells > 0)
+    if (vec && len && cells)
     {
-        char *str = VecToStr(vec, cells);
-
-        if (str != NULL)
+        size_t len_c = len;
+        
+        if (len > (cells * 8))
         {
-            for (size_t i = 0; i < (cells * 8) + 1; i++)
-            {
-                printf("%c", str[i]);
-            }
-            
-            free(str);
-            res = true;
+            len_c = cells * 8;
         }
+        
+        unsigned char mask_tail = 255 >> ((8 * cells) - len_c);
+
+        size_t k = 0;
+        unsigned char mask;
+
+        for (size_t i = 0; i < cells; i++)
+        {
+            mask = 1 << 7;
+
+            for (size_t j = 0; (j < 8) && (k < len_c); j++)
+            {
+                if (i != cells - 1)
+                {
+                    if (mask & vec[i])
+                    {
+                        printf("1");
+                    }
+                    else
+                    {
+                        printf("0");
+                    }
+
+                    k++;
+                }
+                else
+                {
+                    if (mask & mask_tail)
+                    {
+                        if (mask & vec[i])
+                        {
+                            printf("1");
+                        }
+                        else
+                        {
+                            printf("0");
+                        }
+
+                        k++;
+                    }
+                }
+
+                mask = mask >> 1;
+            }
+        }
+
+        res = true;
     }
 
     return res;
@@ -110,35 +151,44 @@ bool printVec(unsigned char* vec, size_t cells)
 
 int main()
 {
-    
+    //Тесты 1
+
+    //11100111 11111111 11100001 01111011
     unsigned char str[32] = "asv00itrgnnfnbfls;e000043994098\0";
+
+    //010001
+    //unsigned char str[7] = "0b000c\0";
+
+    //11111111 11111111
+    //unsigned char str[17] = "1234567812345678\0";
+
+    //unsigned char str[1] = "\0";
+
     printf("%s\n", str);
-    
-    size_t cells;
+
+    size_t cells = 1;
+    size_t len = strlen(str);
     unsigned char *vec = StrToVec(str, &cells);
 
-    if (vec != NULL)
+    if (vec)
     {
-        for (size_t i = 0; i < cells; i++)
-        {
-            printf("%X ", vec[i]);
-        }
-
-        printf("len: %d\n", cells);
-    }
-    else
-    {
-        printf("Memory was never allocated ");
+        unsigned char* new_str = VecToStr(vec, cells);
+        printf("%s\n", new_str);
+        
+        free(new_str);
+        new_str = NULL;
     }
 
-    bool flagN = printVec(vec, cells);
-    if (!flagN)
+    bool check = printVec(vec, len, cells);
+    if (!check)
     {
-        printf("Memory was never allocated ");
+        printf("an error occured\n");
     }
 
     free(vec);
+    vec = NULL;
+
+    printf("\n");
 
     return 0;
-
 }
