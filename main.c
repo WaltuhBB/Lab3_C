@@ -85,20 +85,15 @@ char* VecToStr(unsigned char* vec, size_t cells)
 }
 
 //Вывод вектора в консоль
-bool printVec(unsigned char* vec, size_t len, size_t cells)
+bool printVec(unsigned char* vec, size_t len)
 {
     bool res = false;
 
-    if (vec && len && cells)
-    {
-        size_t len_c = len;
+    if (vec && len)
+    {    
+        size_t cells = ((len-1) / 8) + 1;
         
-        if (len > (cells * 8))
-        {
-            len_c = cells * 8;
-        }
-        
-        unsigned char mask_tail = 255 >> ((8 * cells) - len_c);
+        unsigned char mask_tail = 255 >> ((8 * cells) - len);
 
         size_t k = 0;
         unsigned char mask;
@@ -107,7 +102,7 @@ bool printVec(unsigned char* vec, size_t len, size_t cells)
         {
             mask = 1 << 7;
 
-            for (size_t j = 0; (j < 8) && (k < len_c); j++)
+            for (size_t j = 0; (j < 8) && (k < len); j++)
             {
                 if (i != cells - 1)
                 {
@@ -156,6 +151,9 @@ int main()
     //11100111 11111111 11100001 01111011
     unsigned char str[32] = "asv00itrgnnfnbfls;e000043994098\0";
 
+    //00000111 11111111 11100001 01111011
+    //unsigned char str[32] = "00000itrgnnfnbfls;e000043994098\0";
+
     //010001
     //unsigned char str[7] = "0b000c\0";
 
@@ -179,7 +177,7 @@ int main()
         new_str = NULL;
     }
 
-    bool check = printVec(vec, len, cells);
+    bool check = printVec(vec, len);
     if (!check)
     {
         printf("an error occured\n");
@@ -189,6 +187,10 @@ int main()
     vec = NULL;
 
     printf("\n");
+
+    //Тесты 2
+
+
 
     return 0;
 }
