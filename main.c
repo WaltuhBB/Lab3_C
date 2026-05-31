@@ -214,6 +214,23 @@ unsigned char* sumMod2(unsigned char* vec_A, size_t bits_A, unsigned char* vec_B
     return res;
 }
 
+//Инверсия
+void inversion(unsigned char* vec, size_t bits)
+{
+    if (vec && bits)
+    {
+        size_t cells = ((bits - 1) / 8) + 1;
+        unsigned char tail_mask = 255 >> ((cells * 8) - bits);
+
+        for (size_t i = 0; i < cells; i++)
+        {
+            vec[i] = ~vec[i];
+        }
+
+        vec[cells-1] = vec[cells - 1] & tail_mask;
+    }
+}
+
 int main()
 {
 //Тесты 1
@@ -340,6 +357,38 @@ int main()
     vec_2 = NULL;
 
     printf("\n\n");
+
+
+
+//Инверсия
+
+    printf("Inversion tests\n\n");
+
+    unsigned char strIN[100] = "1100101010100011101\0";
+    //unsigned char strIN[100] = "110010101010001110111011\0";
+    
+    size_t cellsIN; 
+    unsigned char *vecIN = StrToVec(strIN, &cellsIN);
+
+    if (vecIN)
+    {
+        printVec(vecIN, 19);
+        //printVec(vecIN, 24);
+
+        inversion(vecIN, 19);
+        //inversion(vecIN, 24);
+
+        printf("\n");
+        printVec(vecIN, 19);
+        //printVec(vecIN, 24);
+    }
+    else
+    {
+        printf("Memory was never allocated");
+    }
+
+    free(vecIN);
+    vecIN = NULL;
 
     return 0;
 }
