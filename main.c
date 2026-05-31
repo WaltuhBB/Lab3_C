@@ -170,6 +170,28 @@ unsigned char* logMul(unsigned char* vec_A, size_t bits_A, unsigned char* vec_B,
     return res;
 }
 
+//Логическое сложение
+unsigned char* logSum(unsigned char* vec_A, size_t bits_A, unsigned char* vec_B, size_t bits_B)
+{
+    unsigned char *res = NULL;
+
+    if (vec_A && vec_B && bits_A && bits_B && (bits_A == bits_B))
+    {
+        size_t cells = ((bits_A - 1) / 8) + 1;
+        res = (unsigned char*)calloc(cells, sizeof(unsigned char));
+
+        if (res)
+        {
+            for (size_t i = 0; i < cells; i++)
+            {
+                res[i] = vec_A[i] | vec_B[i];
+            }
+        }
+    }
+
+    return res;
+}
+
 int main()
 {
 //Тесты 1
@@ -216,9 +238,9 @@ int main()
 
 //Тесты 2
 
-//Умножение
+//Умножение/Сложение/Сумма по модулю 2
 
-    printf("logMul tests:\n\n");
+    printf("logMul/logSum/sumMod2 tests:\n\n");
 
     size_t cells_1;
     size_t cells_2;
@@ -228,7 +250,8 @@ int main()
 
     if (vec_1 && vec_2)
     {
-        unsigned char *vec_res = logMul(vec_1, 7, vec_2, 5);
+        //unsigned char *vec_res = logMul(vec_1, 7, vec_2, 5);
+        unsigned char *vec_res = logSum(vec_1, 7, vec_2, 5);
 
         printVec(vec_1, 7);
         printf("\n");
@@ -254,14 +277,19 @@ int main()
     free(vec_2);
     vec_2 = NULL;
 
+
+
     printf("\n\n");
+
+
 
     vec_1 = StrToVec("110110101110000\0", &cells_1);
     vec_2 = StrToVec("101110001110110\0", &cells_2);
 
     if (vec_1 && vec_2)
     {
-        unsigned char *vec_res = logMul(vec_1, 15, vec_2, 15);
+        //unsigned char *vec_res = logMul(vec_1, 15, vec_2, 15);
+        unsigned char *vec_res = logSum(vec_1, 15, vec_2, 15);
 
         printVec(vec_1, 15);
         printf("\n");
@@ -286,6 +314,8 @@ int main()
     vec_1 = NULL;
     free(vec_2);
     vec_2 = NULL;
+
+    printf("\n\n");
 
     return 0;
 }
