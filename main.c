@@ -192,6 +192,28 @@ unsigned char* logSum(unsigned char* vec_A, size_t bits_A, unsigned char* vec_B,
     return res;
 }
 
+//Сумма по модулю 2
+unsigned char* sumMod2(unsigned char* vec_A, size_t bits_A, unsigned char* vec_B, size_t bits_B)
+{
+    unsigned char *res = NULL;
+
+    if (vec_A && vec_B && bits_A && bits_B && (bits_A == bits_B))
+    {
+        size_t cells = ((bits_A - 1) / 8) + 1;
+        res = (unsigned char*)calloc(cells, sizeof(unsigned char));
+
+        if (res)
+        {
+            for (size_t i = 0; i < cells; i++)
+            {
+                res[i] = vec_A[i] ^ vec_B[i];
+            }
+        }
+    }
+
+    return res;
+}
+
 int main()
 {
 //Тесты 1
@@ -251,7 +273,8 @@ int main()
     if (vec_1 && vec_2)
     {
         //unsigned char *vec_res = logMul(vec_1, 7, vec_2, 5);
-        unsigned char *vec_res = logSum(vec_1, 7, vec_2, 5);
+        //unsigned char *vec_res = logSum(vec_1, 7, vec_2, 5);
+        unsigned char *vec_res = sumMod2(vec_1, 7, vec_2, 5);
 
         printVec(vec_1, 7);
         printf("\n");
@@ -289,7 +312,8 @@ int main()
     if (vec_1 && vec_2)
     {
         //unsigned char *vec_res = logMul(vec_1, 15, vec_2, 15);
-        unsigned char *vec_res = logSum(vec_1, 15, vec_2, 15);
+        //unsigned char *vec_res = logSum(vec_1, 15, vec_2, 15);
+        unsigned char *vec_res = sumMod2(vec_1, 15, vec_2, 15);
 
         printVec(vec_1, 15);
         printf("\n");
