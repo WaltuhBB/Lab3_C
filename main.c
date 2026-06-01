@@ -44,7 +44,7 @@ unsigned char* StrToVec(char* str, size_t* cells)
 }
 
 //Перевод вектора в строку
-char* VecToStr(unsigned char* vec, size_t cells)
+unsigned char* VecToStr(unsigned char* vec, size_t cells)
 {
     char *str = NULL;
 
@@ -231,6 +231,32 @@ void inversion(unsigned char* vec, size_t bits)
     }
 }
 
+//Сдвиг влево на k разрядов
+void shiftLeft(unsigned char* vec, size_t bits, size_t k)
+{
+    if (vec && bits && k)
+    {
+        size_t cells = ((bits - 1) / 8) + 1;
+
+        size_t bit_shift = k % 8;
+        size_t cell_shift = k / 8;
+
+        unsigned char mask;
+
+        for (size_t i = 0; i < cells - cell_shift; i++)
+        {
+            mask = vec[i + cell_shift + 1] >> (8 - bit_shift);
+            vec[i] = vec[i + cell_shift] << bit_shift;
+            vec[i] = vec[i] | mask;
+        }
+
+        for (size_t i = cells - cell_shift; i < cells; i++)
+        {
+            vec[i] = 0;
+        }
+    }
+}
+
 int main()
 {
 //Тесты 1
@@ -389,6 +415,38 @@ int main()
 
     free(vecIN);
     vecIN = NULL;
+
+    printf("\n\n");
+
+//Сдвиг влево/вправо
+
+    printf("Shift tests\n\n");
+
+    //1110 0111 0101 0110 0000 0000 сдвиг на 9
+    unsigned char strS[100] = "101101101111001110101011\0";
+
+    size_t cellsS;
+    unsigned char *vecS = StrToVec(strS, &cellsS);
+
+    if (vecS)
+    {
+        printVec(vecS, 24);
+
+        printf("\n");
+
+        shiftLeft(vecS, 24, 17);
+
+        printVec(vecS, 24);
+    }
+    else
+    {
+        printf("Memory was never allocated");
+    }
+
+    free(vecS);
+    vecS = NULL;
+
+    printf("\n\n");
 
     return 0;
 }
