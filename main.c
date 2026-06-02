@@ -3,6 +3,9 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
+//Основные фунции
+
+
 int main()
 {
     
