@@ -39,6 +39,7 @@ unsigned char* StrToVec(char* str, size_t* cells)
     return vec;
 }
 
+//Конвертация вектора в строку
 char* VecToStr(unsigned char* vec, size_t cells)
 {
     char* str = NULL;
@@ -79,6 +80,47 @@ char* VecToStr(unsigned char* vec, size_t cells)
     return str;
 }
 
+//Вывод вектора в консоль
+bool printVec(unsigned char* vec, size_t bits)
+{
+    bool res = false;
+
+    if (vec && bits)
+    {
+        size_t cells = ((bits - 1) / 8) + 1;
+
+        unsigned char mask;
+        size_t k = 0;
+        
+        for (size_t i = 0; i < cells; i++)
+        {
+            mask = 1 << 7;
+
+            for (size_t j = 0; (j < 8) && (k < bits); j++)
+            {
+                if (vec[i] & mask)
+                {
+                    printf("1");
+                }
+                else
+                {
+                    printf("0");
+                }
+
+                mask = mask >> 1;
+                k++;
+            }
+
+            printf(" ");
+        }
+        
+        printf("\n");
+        res = true;
+    }
+
+    return res;
+}
+
 int main()
 {
     size_t cells;
@@ -99,6 +141,8 @@ int main()
             printf("%d ", vec_1[i]);
         }
         printf("\n");
+
+        printVec(vec_1, 31);
 
         unsigned char *new_str = VecToStr(vec_1, cells);
 
@@ -134,6 +178,8 @@ int main()
         }
         printf("\n");
 
+        printVec(vec_2, 16);
+
         unsigned char *new_str = VecToStr(vec_2, cells);
 
         if (new_str)
@@ -167,6 +213,8 @@ int main()
             printf("%d ", vec_3[i]);
         }
         printf("\n");
+
+        printVec(vec_3, 1);
 
         unsigned char *new_str = VecToStr(vec_3, cells);
 
