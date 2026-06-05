@@ -39,6 +39,46 @@ unsigned char* StrToVec(char* str, size_t* cells)
     return vec;
 }
 
+char* VecToStr(unsigned char* vec, size_t cells)
+{
+    char* str = NULL;
+
+    if (vec && cells > 0)
+    {
+        size_t bits = 8 * cells;
+        str = (char*)calloc(bits + 1, sizeof(char));
+
+        if (str)
+        {
+            unsigned char mask;
+            size_t k = 0;
+
+            for (size_t i = 0; i < cells; i++)
+            {
+                mask = 1;
+                mask = mask << 7;
+
+                for (size_t j = 0; (j < 8) && (k < bits); j++)
+                {
+                    if (vec[i] & mask)
+                    {
+                        str[k] = '1';
+                    }
+                    else
+                    {
+                        str[k] = '0';
+                    }
+                    
+                    k++;
+                    mask = mask >> 1;
+                }
+            }
+        }
+    }
+
+    return str;
+}
+
 int main()
 {
     size_t cells;
@@ -57,6 +97,21 @@ int main()
         for (size_t i = 0; i < cells; i++)
         {
             printf("%d ", vec_1[i]);
+        }
+        printf("\n");
+
+        unsigned char *new_str = VecToStr(vec_1, cells);
+
+        if (new_str)
+        {
+            printf("%s", new_str);
+
+            free(new_str);
+            new_str = NULL;
+        }
+        else
+        {
+            printf("and error occured");
         }
     }
     else
@@ -77,6 +132,21 @@ int main()
         {
             printf("%d ", vec_2[i]);
         }
+        printf("\n");
+
+        unsigned char *new_str = VecToStr(vec_2, cells);
+
+        if (new_str)
+        {
+            printf("%s", new_str);
+
+            free(new_str);
+            new_str = NULL;
+        }
+        else
+        {
+            printf("and error occured");
+        }
     }
     else
     {
@@ -95,6 +165,21 @@ int main()
         for (size_t i = 0; i < cells; i++)
         {
             printf("%d ", vec_3[i]);
+        }
+        printf("\n");
+
+        unsigned char *new_str = VecToStr(vec_3, cells);
+
+        if (new_str)
+        {
+            printf("%s", new_str);
+
+            free(new_str);
+            new_str = NULL;
+        }
+        else
+        {
+            printf("and error occured");
         }
     }
     else
