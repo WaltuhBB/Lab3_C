@@ -121,159 +121,74 @@ bool printVec(unsigned char* vec, size_t bits)
     return res;
 }
 
+//Операции с булевыми векторами
+
+//Установка k-го разряда
+void set1(unsigned char* vec, size_t bits, size_t k)
+{
+    if (vec && bits && k < bits)
+    {
+        size_t cell = k / 8;
+        size_t bit = k % 8;
+
+        unsigned char mask = 1 << 7;
+        mask = mask >> bit;
+
+        vec[cell] = vec[cell] | mask;
+    }
+}
+
+//Сброс k-го разряда
+void set0(unsigned char* vec, size_t bits, size_t k)
+{
+    if (vec && bits && k < bits)
+    {
+        size_t cell = k / 8;
+        size_t bit = k % 8;
+
+        unsigned char mask = 1 << 7;
+        mask = mask >> bit;
+        mask = ~mask;
+
+        vec[cell] = vec[cell] & mask;
+    }
+}
+
 int main()
 {
-    size_t cells;
-    
     char str_1[32] = "asv00itrgnnfnbfls;e000043994098\0";
     char str_2[17] = "1101001100011100\0";
-    char str_3[2] = "1\0";
-    char *str_NULL = NULL;
-    char str_zero[1] = "\0";
+    char str_3[2] = "0\0";
+    
+    size_t cells;
 
-    //для str_1
+    char *str_new = NULL;
+
     unsigned char *vec_1 = StrToVec(str_1, &cells);
-    if (vec_1)
-    {
-        printf("%s\n", str_1);
-        for (size_t i = 0; i < cells; i++)
-        {
-            printf("%d ", vec_1[i]);
-        }
-        printf("\n");
+    printVec(vec_1, 31);
+    set1(vec_1, 31, 28);
+    printVec(vec_1 , 31);
 
-        printVec(vec_1, 31);
+    printf("\n");
 
-        unsigned char *new_str = VecToStr(vec_1, cells);
-
-        if (new_str)
-        {
-            printf("%s", new_str);
-
-            free(new_str);
-            new_str = NULL;
-        }
-        else
-        {
-            printf("and error occured");
-        }
-    }
-    else
-    {
-        printf("memory was never allocated ");
-    }
-    free(vec_1);
-    vec_1 = NULL;
-
-    printf("\n\n");
-
-    //для str_2
     unsigned char *vec_2 = StrToVec(str_2, &cells);
-    if (vec_2)
-    {
-        printf("%s\n", str_2);
-        for (size_t i = 0; i < cells; i++)
-        {
-            printf("%d ", vec_2[i]);
-        }
-        printf("\n");
+    printVec(vec_2, 16);
+    set0(vec_2, 16, 1);
+    printVec(vec_2 , 16);
 
-        printVec(vec_2, 16);
+    printf("\n");
 
-        unsigned char *new_str = VecToStr(vec_2, cells);
-
-        if (new_str)
-        {
-            printf("%s", new_str);
-
-            free(new_str);
-            new_str = NULL;
-        }
-        else
-        {
-            printf("and error occured");
-        }
-    }
-    else
-    {
-        printf("memory was never allocated ");
-    }
-    free(vec_2);
-    vec_2 = NULL;
-
-    printf("\n\n");
-
-    //для str_3
     unsigned char *vec_3 = StrToVec(str_3, &cells);
-    if (vec_3)
-    {
-        printf("%s\n", str_3);
-        for (size_t i = 0; i < cells; i++)
-        {
-            printf("%d ", vec_3[i]);
-        }
-        printf("\n");
+    printVec(vec_3, 1);
+    set1(vec_3, 1, 0);
+    printVec(vec_3 , 1);
 
-        printVec(vec_3, 1);
-
-        unsigned char *new_str = VecToStr(vec_3, cells);
-
-        if (new_str)
-        {
-            printf("%s", new_str);
-
-            free(new_str);
-            new_str = NULL;
-        }
-        else
-        {
-            printf("and error occured");
-        }
-    }
-    else
-    {
-        printf("memory was never allocated ");
-    }
+    free(vec_1);
+    free(vec_2);
     free(vec_3);
+    vec_1 = NULL;
+    vec_2 = NULL;
     vec_3 = NULL;
-
-    printf("\n\n");
-
-    //для str_NULL
-    unsigned char *vec_NULL = StrToVec(str_NULL, &cells);
-    if (vec_NULL)
-    {
-        printf("%s\n", str_NULL);
-        for (size_t i = 0; i < cells; i++)
-        {
-            printf("%d ", vec_NULL[i]);
-        }
-    }
-    else
-    {
-        printf("memory was never allocated ");
-    }
-    free(vec_NULL);
-    vec_NULL = NULL;
-
-    printf("\n\n");
-
-    //для str_zero
-    unsigned char *vec_zero = StrToVec(str_zero, &cells);
-    if (vec_zero)
-    {
-        printf("%s\n", str_zero);
-        for (size_t i = 0; i < cells; i++)
-        {
-            printf("%d ", vec_zero[i]);
-        }
-    }
-    else
-    {
-        printf("memory was never allocated ");
-    }
-    free(vec_zero);
-    vec_zero = NULL;
     
     return 0;
 }
