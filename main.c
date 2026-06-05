@@ -154,6 +154,63 @@ void set0(unsigned char* vec, size_t bits, size_t k)
     }
 }
 
+//Сдвиг влево на k разрядов
+void shiftLeft(unsigned char* vec, size_t bits, size_t k)
+{
+    if (vec && bits && k)
+    {
+        size_t cells = ((bits - 1) / 8) + 1;
+
+        if (k >= bits)
+        {
+            for (size_t i = 0; i < cells; i++)
+            {
+                vec[i] = 0;
+            }
+        }
+        else
+        {
+            size_t cells = ((bits - 1) / 8) + 1;
+            size_t byte_shift = k / 8;
+            size_t bit_shift = k % 8;
+
+            if (!bit_shift)
+            {
+                for (size_t i = 0; i < cells - byte_shift; i++)
+                {
+                    vec[i] = vec[i+byte_shift];
+                }
+            }
+            else
+            {
+                size_t i;
+                
+                for (i = 0; i < cells - byte_shift - 1; i++)
+                {
+                    size_t src = i + byte_shift;
+                    size_t src_next = src + 1;
+
+                    unsigned char part_1 = vec[src] << bit_shift;
+                    unsigned char part_2 = vec[src_next] >> (8 - bit_shift);
+
+                    vec[i] = part_1 | part_2;
+                }
+
+                size_t src = i + byte_shift;
+                vec[i] = vec[src] << bit_shift;
+            }
+
+            for (size_t i = cells - byte_shift; i < cells; i++)
+            {
+                vec[i] = 0;
+            }
+        }
+    }
+}
+
+//Свдиг вправо на k разрядов
+
+
 int main()
 {
     char str_1[32] = "asv00itrgnnfnbfls;e000043994098\0";
@@ -166,14 +223,18 @@ int main()
 
     unsigned char *vec_1 = StrToVec(str_1, &cells);
     printVec(vec_1, 31);
-    set1(vec_1, 31, 28);
+    shiftLeft(vec_1, 31, 28);
+
+    str_new = VecToStr(vec_1, cells);
+    printf("%s\n", str_new);
+
     printVec(vec_1 , 31);
 
     printf("\n");
 
     unsigned char *vec_2 = StrToVec(str_2, &cells);
     printVec(vec_2, 16);
-    set0(vec_2, 16, 1);
+    shiftLeft(vec_2, 16, 9);
     printVec(vec_2 , 16);
 
     printf("\n");
