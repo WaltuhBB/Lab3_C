@@ -265,6 +265,74 @@ void shiftRight(unsigned char* vec, size_t bits, size_t k)
     }
 }
 
+//Логическое умножение
+unsigned char* logMul(unsigned char* vecA, size_t bitsA, unsigned char* vecB, size_t bitsB)
+{
+    unsigned char *res = NULL;
+
+    if (vecA && vecB && bitsA && bitsB && (bitsA == bitsB))
+    {
+        size_t cells = ((bitsA - 1) / 8) + 1;
+
+        res = (unsigned char*)calloc(cells, sizeof(unsigned char));
+
+        if (res)
+        {
+            for (size_t i = 0; i < cells; i++)
+            {
+                res[i] = vecA[i] & vecB[i];
+            }
+        }
+    }
+
+    return res;
+}
+
+//Логическое сложение
+unsigned char* logSum(unsigned char* vecA, size_t bitsA, unsigned char* vecB, size_t bitsB)
+{
+    unsigned char *res = NULL;
+
+    if (vecA && vecB && bitsA && bitsB && (bitsA == bitsB))
+    {
+        size_t cells = ((bitsA - 1) / 8) + 1;
+
+        res = (unsigned char*)calloc(cells, sizeof(unsigned char));
+
+        if (res)
+        {
+            for (size_t i = 0; i < cells; i++)
+            {
+                res[i] = vecA[i] | vecB[i];
+            }
+        }
+    }
+
+    return res;
+}
+
+//Сумма по модулю 2
+unsigned char* sumMod2(unsigned char* vecA, size_t bitsA, unsigned char* vecB, size_t bitsB)
+{
+    unsigned char *res = NULL;
+
+    if (vecA && vecB && bitsA && bitsB && (bitsA == bitsB))
+    {
+        size_t cells = ((bitsA - 1) / 8) + 1;
+
+        res = (unsigned char*)calloc(cells, sizeof(unsigned char));
+
+        if (res)
+        {
+            for (size_t i = 0; i < cells; i++)
+            {
+                res[i] = vecA[i] ^ vecB[i];
+            }
+        }
+    }
+
+    return res;
+}
 
 int main()
 {
