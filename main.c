@@ -209,12 +209,67 @@ void shiftLeft(unsigned char* vec, size_t bits, size_t k)
 }
 
 //Свдиг вправо на k разрядов
+void shiftRight(unsigned char* vec, size_t bits, size_t k)
+{
+    if (vec && bits && k)
+    {
+        if (k >= bits)
+        {
+            size_t cells = ((bits - 1) / 8) + 1;
+
+            for (size_t i = 0; i < cells; i++)
+            {
+                vec[i] = 0;
+            }
+        }
+        else
+        {
+            size_t cells = ((bits - 1) / 8) + 1;
+            size_t byte_shift = k / 8;
+            size_t bit_shift = k % 8;
+
+            if (!bit_shift)
+            {
+                for (size_t i = cells - 1; i >= byte_shift; i--)
+                {
+                    vec[i] = vec[i-byte_shift];
+                }
+            }
+            else
+            {
+                for (size_t i = cells - 1; i > byte_shift; i--)
+                {
+                    size_t src = i - byte_shift;
+                    size_t src_prev = src - 1;
+
+                    unsigned char part_1 = vec[src] >> bit_shift;
+                    unsigned char part_2 = vec[src_prev] << (8 - bit_shift);
+
+                    vec[i] = part_1 | part_2;
+                }
+
+                size_t src = 0;
+                vec[byte_shift] = vec[src] >> bit_shift;
+            }
+
+            for (size_t i = 0; i < byte_shift; i++)
+            {
+                vec[i] = 0;
+            }
+
+            size_t tail_len = cells * 8 - bits;
+            unsigned char tail_mask = 255 << tail_len;
+
+            vec[cells-1] = vec[cells-1] & tail_mask;
+        }
+    }
+}
 
 
 int main()
 {
-    char str_1[32] = "asv00itrgnnfnbfls;e000043994098\0";
-    char str_2[17] = "1101001100011100\0";
+    char str_1[32] = "asv11itrgnnfnbfls;e111143994198\0";
+    char str_2[17] = "1111111111111111\0";
     char str_3[2] = "0\0";
     
     size_t cells;
@@ -223,7 +278,7 @@ int main()
 
     unsigned char *vec_1 = StrToVec(str_1, &cells);
     printVec(vec_1, 31);
-    shiftLeft(vec_1, 31, 28);
+    shiftRight(vec_1, 31, 28);
 
     str_new = VecToStr(vec_1, cells);
     printf("%s\n", str_new);
@@ -234,7 +289,7 @@ int main()
 
     unsigned char *vec_2 = StrToVec(str_2, &cells);
     printVec(vec_2, 16);
-    shiftLeft(vec_2, 16, 9);
+    shiftRight(vec_2, 16, 9);
     printVec(vec_2 , 16);
 
     printf("\n");
