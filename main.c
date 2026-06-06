@@ -334,9 +334,28 @@ unsigned char* sumMod2(unsigned char* vecA, size_t bitsA, unsigned char* vecB, s
     return res;
 }
 
+//Инверсия
+void inversion(unsigned char* vec, size_t bits)
+{
+    if (vec && bits)
+    {
+        size_t cells = ((bits - 1) / 8) + 1;
+
+        for (size_t i = 0; i < cells; i++)
+        {
+            vec[i] = ~vec[i];
+        }
+
+        size_t tail_len = cells * 8 - bits;
+        unsigned char tail_mask = 255 << tail_len;
+
+        vec[cells-1] = vec[cells-1] & tail_mask;
+    }
+}
+
 int main()
 {
-    char str_1[32] = "asv11itrgnnfnbfls;e111143994198\0";
+    char str_1[32] = "asv00itrgnnfnbfls;e000043994098\0";
     char str_2[17] = "1111111111111111\0";
     char str_3[2] = "0\0";
     
@@ -346,7 +365,7 @@ int main()
 
     unsigned char *vec_1 = StrToVec(str_1, &cells);
     printVec(vec_1, 31);
-    shiftRight(vec_1, 31, 28);
+    inversion(vec_1, 31);
 
     str_new = VecToStr(vec_1, cells);
     printf("%s\n", str_new);
