@@ -363,35 +363,7 @@ int main()
 
     char *str_new = NULL;
 
-    unsigned char *vec_1 = StrToVec(str_1, &cells);
-    printVec(vec_1, 31);
-    inversion(vec_1, 31);
-
-    str_new = VecToStr(vec_1, cells);
-    printf("%s\n", str_new);
-
-    printVec(vec_1 , 31);
-
-    printf("\n");
-
-    unsigned char *vec_2 = StrToVec(str_2, &cells);
-    printVec(vec_2, 16);
-    shiftRight(vec_2, 16, 9);
-    printVec(vec_2 , 16);
-
-    printf("\n");
-
-    unsigned char *vec_3 = StrToVec(str_3, &cells);
-    printVec(vec_3, 1);
-    set1(vec_3, 1, 0);
-    printVec(vec_3 , 1);
-
-    free(vec_1);
-    free(vec_2);
-    free(vec_3);
-    vec_1 = NULL;
-    vec_2 = NULL;
-    vec_3 = NULL;
+    //тут будут тесты
     
     return 0;
 }
